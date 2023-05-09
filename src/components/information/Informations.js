@@ -1,8 +1,9 @@
 import { Button, Alert, Container, Typography } from "@mui/material";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import useDebounce from "../../hooks/useDebounce";
 import axios from "axios";
 import Labelinput from "../Labelinput";
+import MyComponent from "../ToggleColorMode";
 
 const Informations = (props) => {
   const [baseUrl, setBaseUrl] = useState(
@@ -14,12 +15,11 @@ const Informations = (props) => {
   const [entredPricePerUnit, setEntredPricePerUnit] = useState("");
   const [entredQuantity, setEntredQuantity] = useState("");
   const [entredPriceGross, setEntredPriceGross] = useState(0);
-  const [showAlert, setShowAlert] = useState(0);
+  const [showAlert, setShowAlert] = useState("");
   const debounceValue = useDebounce(entredTaxID, 1000);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // setShowAlert(true);
     if (
       entredTaxID &&
       entredCompanyName &&
@@ -78,12 +78,9 @@ const Informations = (props) => {
         throw "Error";
       }
 
-      const filteredData = [];
-      data.data.forEach((data) => {
-        if (data.tax_id.includes(searchTax)) {
-          filteredData.push(data);
-        }
-      });
+      const filteredData = data.data.filter((data) =>
+        data.tax_id.includes(searchTax)
+      );
 
       if (filteredData.length === 1) {
         setEntredTaxID(filteredData[0].tax_id);
@@ -96,7 +93,7 @@ const Informations = (props) => {
   };
 
   return (
-    <div>
+    <>
       {showAlert && (
         <Alert
           severity={showAlert}
@@ -120,7 +117,7 @@ const Informations = (props) => {
             justifyContent: "center",
             flexDirection: "column",
             mb: 2,
-            backgroundColor: "#ccc",
+
             height: "800px",
             lineHeight: 1.5,
           }}
@@ -169,7 +166,8 @@ const Informations = (props) => {
           </Button>
         </Container>
       </form>
-    </div>
+      <MyComponent></MyComponent>
+    </>
   );
 };
 
